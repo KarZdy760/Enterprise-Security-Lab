@@ -1,6 +1,6 @@
 # ENTERPRISE SECURITY LAB
 
-Enterprise cybersecurity homelab built to simulate an enterprise environment for SOC/Blue Team operations, detection engineering, Windows Server and AD security.
+Enterprise cybersecurity homelab built to simulate an enterprise environment for SOC/Blue Team operations, detection engineering, Windows Server and AD security. 
 
 ## Project Goals
 
@@ -31,6 +31,11 @@ Current Infrastructure:
 - DNS server configuration
 
 - Domain creation
+
+
+### GPO Policy Hardening
+
+- I implemented a set of Group Policy Object (GPO) policies to improve the security of the domain environment. The implemented policies included the configuration of Microsoft Defender, Windows Defender Firewall, password policies, Control Panel restrictions, screen lock settings, and other security-related configurations. Detailed screenshots of all implemented policies can be found in the SCREENS/GPO directory.
 
 ### Wazuh
 
