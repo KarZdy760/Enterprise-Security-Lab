@@ -32,10 +32,21 @@ Current Infrastructure:
 
 - Domain creation
 
+- Windows LAPS
+
 
 ### GPO Policy Hardening
 
 - I implemented a set of Group Policy Object (GPO) policies to improve the security of the domain environment. The implemented policies included the configuration of Microsoft Defender, Windows Defender Firewall, password policies, Control Panel restrictions, screen lock settings, and other security-related configurations. Detailed screenshots of all implemented policies can be found in the SCREENS/GPO directory.
+
+
+### Windows LAPS
+
+Windows LAPS was implemented to improve the security of local administrator accounts on domain-joined workstations. LAPS automatically generates and periodically rotates a unique password for the built-in local Administrator account, encryptes it, and stores the password in Active Directory.
+
+Access to LAPS passwords is restricted to the dedicated "LAPS_Password_Readers" security group, following the principle of least privilege. Password encryption and post-authentication password rotation were also configured.
+
+Screenshots are available in the 'Screens/LAPS' directory
 
 ### Wazuh
 
