@@ -10,7 +10,7 @@ Current Infrastructure:
 
 - Windows Server 2022 (Domain Controller)
 
-- Windows 10 Client
+- 4 Windows 10 Clients
 
 - Docker Desktop
 
