@@ -1,0 +1,152 @@
+<Sysmon schemaversion="4.90">
+    <!-- Specify hashing algorithm -->
+    <HashAlgorithms>*</HashAlgorithms>
+ 
+    <!-- Event rules -->
+    <EventFiltering>
+        <!-- Process Creation-->
+            <RuleGroup name="Process Creation" groupRelation="or">
+
+                <!-- Exclusions -->
+                <ProcessCreate onmatch="exclude">
+
+                    <!-- Generic Microsoft Processes-->
+                        <CommandLine condition="begin with">C:\Windows\system32\DllHost.exe /Processid</CommandLine>				<!--Microsoft:Windows-->
+                        <CommandLine condition="is">C:\Windows\system32\SearchIndexer.exe /Embedding</CommandLine>				<!--Microsoft:Windows: Search Indexer-->
+                        <Image condition="end with">C:\Windows\System32\CompatTelRunner.exe</Image>				<!--Microsoft:Windows:Customer Experience Improvement-->
+                        <Image condition="is">C:\Windows\System32\MusNotification.exe</Image>				<!--Microsoft:Windows: Update popups-->
+                        <Image condition="is">C:\Windows\System32\MusNotificationUx.exe</Image>				<!--Microsoft:Windows: Update popups-->
+                        <Image condition="is">C:\Windows\System32\audiodg.exe</Image>				<!--Microsoft:Windows: Launched constantly-->
+                        <Image condition="is">C:\Windows\System32\conhost.exe</Image>				<!--Microsoft:Windows: Command line interface host process-->
+                        <Image condition="is">C:\Windows\System32\powercfg.exe</Image>				<!--Microsoft:Power configuration management-->
+                        <Image condition="is">C:\Windows\System32\wbem\WmiApSrv.exe</Image>				<!--Microsoft:Windows: WMI performance adpater host process-->
+                        <Image condition="is">C:\Windows\System32\wermgr.exe</Image>				<!--Microsoft:Windows:Windows error reporting/telemetry-->
+                        <Image condition="is">C:\Windows\SysWOW64\wermgr.exe</Image>				<!--Microsoft:Windows:Windows error reporting/telemetry-->
+                        <Image condition="is">C:\Windows\system32\sppsvc.exe</Image>				<!--Microsoft:Windows: Software Protection Service-->
+                        <IntegrityLevel condition="is">AppContainer</IntegrityLevel>				<!--Microsoft:Windows: Don't care about sandboxed processes-->
+                        <ParentCommandLine condition="begin with">%%SystemRoot%%\system32\csrss.exe ObjectDirectory=\Windows</ParentCommandLine>				<!--Microsoft:Windows:CommandShell: Triggered when programs use the command shell, but without attribution-->
+                        <ParentImage condition="is">C:\Windows\system32\SearchIndexer.exe</ParentImage>				<!--Microsoft:Windows:Search: Launches many uninteresting sub-processes-->
+                    <!-- Windows:Defender-->
+                        <Image condition="begin with">C:\Program Files\Windows Defender\</Image>        <!--Microsoft:Windows:Defender in Win10-->
+                        <Image condition="is">C:\Windows\system32\MpSigStub.exe</Image>        <!--Microsoft:Windows: Microsoft Malware Protection Signature Update Stub-->
+                        <Image condition="begin with">C:\Windows\SoftwareDistribution\Download\Install\AM_</Image>        <!--Microsoft:Defender: Signature updates-->
+                        <Image condition="is">C:\Program Files\Microsoft Security Client\MpCmdRun.exe</Image>
+                    <!-- Micrososft:Windows:svchost -->
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k appmodel -s StateRepository</CommandLine>
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k appmodel</CommandLine>				<!--Microsoft:Windows 10-->
+                        <CommandLine condition="is">C:\WINDOWS\system32\svchost.exe -k appmodel -p -s tiledatamodelsvc</CommandLine>
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k camera -s FrameServer</CommandLine>
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k dcomlaunch -s LSM</CommandLine>
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k dcomlaunch -s PlugPlay</CommandLine>
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k defragsvc</CommandLine>				<!--Microsoft:Windows defragmentation-->
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k devicesflow -s DevicesFlowUserSvc</CommandLine>
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k imgsvc</CommandLine>				<!--Microsoft:The Windows Image Acquisition Service-->
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k localService -s EventSystem</CommandLine>
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k localService -s bthserv</CommandLine>
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k localService -s nsi</CommandLine>
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k localService -s w32Time</CommandLine>
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k localServiceAndNoImpersonation</CommandLine>				<!--Microsoft:Windows: Network services-->
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k localServiceNetworkRestricted -s Dhcp</CommandLine>				<!--Microsoft:Windows: Network services-->
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k localServiceNetworkRestricted -s EventLog</CommandLine>
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k localServiceNetworkRestricted -s TimeBrokerSvc</CommandLine>
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k localServiceNetworkRestricted -s WFDSConMgrSvc</CommandLine>
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k localServiceNetworkRestricted</CommandLine>				<!--Microsoft:Windows: Network services-->
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k localServiceAndNoImpersonation -s SensrSvc</CommandLine>
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k localServiceNoNetwork</CommandLine>
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k localSystemNetworkRestricted -p -s WPDBusEnum</CommandLine>
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k localSystemNetworkRestricted -p -s fhsvc</CommandLine>
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k localSystemNetworkRestricted -s DeviceAssociationService</CommandLine>
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k localSystemNetworkRestricted -s NcbService</CommandLine>
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k localSystemNetworkRestricted -s SensorService</CommandLine>
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k localSystemNetworkRestricted -s TabletInputService</CommandLine>
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k localSystemNetworkRestricted -s UmRdpService</CommandLine>
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k localSystemNetworkRestricted -s WPDBusEnum</CommandLine>
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k localSystemNetworkRestricted -s WdiSystemHost</CommandLine>				<!--Microsoft:Windows: Diagnostic System Host [ http://www.blackviper.com/windows-services/diagnostic-system-host/ ] -->
+                        <CommandLine condition="is">C:\WINDOWS\System32\svchost.exe -k LocalSystemNetworkRestricted -p -s WdiSystemHost</CommandLine>				<!--Microsoft:Windows: Diagnostic System Host [ http://www.blackviper.com/windows-services/diagnostic-system-host/ ] -->
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k localSystemNetworkRestricted</CommandLine>				<!--Microsoft:Windows-->
+                        <CommandLine condition="is">C:\WINDOWS\system32\svchost.exe -k netsvcs -p -s wlidsvc</CommandLine>				<!--Microsoft:Windows: Windows Live Sign-In Assistant [ https://www.howtogeek.com/howto/30348/what-are-wlidsvc.exe-and-wlidsvcm.exe-and-why-are-they-running/ ] -->
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k netsvcs -p -s ncaSvc</CommandLine>				<!--Microsoft:Windows: Network Connectivity Assistant [ http://www.blackviper.com/windows-services/network-connectivity-assistant/ ] -->
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k netsvcs -s BDESVC</CommandLine>				<!--Microsoft:Windows:Network: BitLocker Drive Encryption-->
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k netsvcs -s BITS</CommandLine>				<!--Microsoft:Windows:Network: Background Intelligent File Transfer (BITS) -->
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k netsvcs -s CertPropSvc</CommandLine>
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k netsvcs -s DsmSvc</CommandLine>
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k netsvcs -s Gpsvc</CommandLine>				<!--Microsoft:Windows:Network: Group Policy -->
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k netsvcs -s ProfSvc</CommandLine>				<!--Microsoft:Windows: Network services-->
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k netsvcs -s SENS</CommandLine>				<!--Microsoft:Windows: Network services-->
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k netsvcs -s SessionEnv</CommandLine>				<!--Microsoft:Windows: Network services-->
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k netsvcs -s Themes</CommandLine>				<!--Microsoft:Windows: Network services-->
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k netsvcs -s Winmgmt</CommandLine>				<!--Microsoft:Windows: Windows Management Instrumentation (WMI) -->
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k netsvcs</CommandLine>				<!--Microsoft:Windows: Network services-->
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k networkService -p -s DoSvc</CommandLine>
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k networkService -s Dnscache</CommandLine>				<!--Microsoft:Windows:Network: DNS caching, other uses -->
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k networkService -s LanmanWorkstation</CommandLine>				<!--Microsoft:Windows:Network: "Workstation" service, used for SMB file-sharing connections and RDP-->
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k networkService -s NlaSvc</CommandLine>				<!--Microsoft:Windows:Network: Network Location Awareness-->
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k networkService -s TermService</CommandLine>				<!--Microsoft:Windows:Network: Terminal Services (RDP)-->
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k networkService</CommandLine>				<!--Microsoft:Windows: Network services-->
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k networkServiceNetworkRestricted</CommandLine>				<!--Microsoft:Windows: Network services-->
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k rPCSS</CommandLine>				<!--Microsoft:Windows Services-->
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k secsvcs</CommandLine>
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k swprv</CommandLine>				<!--Microsoft:Software Shadow Copy Provider-->
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k unistackSvcGroup</CommandLine>				<!--Microsoft:Windows 10-->
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k utcsvc</CommandLine>				<!--Microsoft:Windows Services-->
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k wbioSvcGroup</CommandLine>				<!--Microsoft:Windows Services-->
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k werSvcGroup</CommandLine>				<!--Microsoft:Windows: ErrorReporting-->
+                        <CommandLine condition="is">C:\WINDOWS\System32\svchost.exe -k wsappx -p -s ClipSVC</CommandLine>				<!--Microsoft:Windows:Apps: Client License Service-->
+                        <CommandLine condition="is">C:\WINDOWS\system32\svchost.exe -k wsappx -p -s AppXSvc</CommandLine>				<!--Microsoft:Windows:Apps: AppX Deployment Service-->
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k wsappx -s ClipSVC</CommandLine>				<!--Microsoft:Windows:Apps: Client License Service-->
+                        <CommandLine condition="is">C:\Windows\system32\svchost.exe -k wsappx</CommandLine>				<!--Microsoft:Windows:Apps [ https://www.howtogeek.com/320261/what-is-wsappx-and-why-is-it-running-on-my-pc/ ] -->
+                        <ParentCommandLine condition="is">C:\Windows\system32\svchost.exe -k netsvcs</ParentCommandLine>				<!--Microsoft:Windows: Network services: Spawns Consent.exe-->
+                        <ParentCommandLine condition="is">C:\Windows\system32\svchost.exe -k localSystemNetworkRestricted</ParentCommandLine>				<!--Microsoft:Windows-->
+                </ProcessCreate>
+
+                <!-- Detections -->
+                <ProcessCreate onmatch="include">
+                    <!-- Suspicious Powershell-->
+                        <CommandLine name="technique_id=T1027,technique_name=Obfuscated Files or Information" condition="contains">FromBase64</CommandLine>
+                        <CommandLine name="technique_id=T1027,technique_name=Obfuscated Files or Information" condition="contains">gzip</CommandLine>
+                        <CommandLine name="technique_id=T1027,technique_name=Obfuscated Files or Information" condition="contains">decompress</CommandLine>
+                        <CommandLine name="technique_id=T1027,technique_name=Obfuscated Files or Information" condition="contains">http</CommandLine>
+                        <CommandLine name="technique_id=T1027,technique_name=Obfuscated Files or Information" condition="contains">replace</CommandLine> <!--Kill Unicorns-->
+                    <!-- Disabling Defender -->
+                        <Rule groupRelation="and">            
+                            <CommandLine condition="contains">Set-MpPreference</CommandLine>
+                            <CommandLine condition="contains any">-DisableRealTimeMonitoring $true;-DisableBehaviorMonitoring $true;-DisableBlockAtFirstSeen $true;-DisableIOAVProtection $true;-DisablePrivacyMode $true;-SignatureDisableUpdateOnStartupWithoutEngine $true;-DisableArchiveScanning $true;-DisableIntrusionPreventionSystem $true;-DisableScriptScanning $true</CommandLine>
+                        </Rule>
+                </ProcessCreate>
+            </RuleGroup>
+
+
+        
+        <!--Process Termination-->
+        <RuleGroup name="Process Termination" groupRelation="or">
+            <ProcessTerminate onmatch="include">
+                <!--  -->
+                <!-- Uncommon locations -->
+                    <Image condition="begin with">C:\PerfLogs\</Image>
+                    <Image condition="begin with">C:\$Recycle.bin\</Image>
+                    <Image condition="begin with">C:\Intel\Logs\</Image>
+                    <Image condition="begin with">C:\Users\Default\</Image>
+                    <Image condition="begin with">C:\Users\Public\</Image>
+                    <Image condition="begin with">C:\Users\NetworkService\</Image>
+                    <Image condition="begin with">C:\Windows\Fonts\</Image>
+                    <Image condition="begin with">C:\Windows\Debug\</Image>
+                    <Image condition="begin with">C:\Windows\Media\</Image>
+                    <Image condition="begin with">C:\Windows\Help\</Image>
+                    <Image condition="begin with">C:\Windows\addins\</Image>
+                    <Image condition="begin with">C:\Windows\repair\</Image>
+                    <Image condition="begin with">C:\Windows\security\</Image>
+                    <Image condition="begin with">C:\Windows\system32\config\systemprofile\</Image>
+                    <Image condition="contains">VolumeShadowCopy</Image>
+                    <Image condition="contains">\htdocs\</Image>
+                    <Image condition="contains">\wwwroot\</Image>
+                    <Image condition="contains">\Temp\</Image>
+                    <Image condition="contains">\Downloads\</Image>
+                    <Image condition="contains">\Desktop\</Image>
+                    <Image condition="contains">\Appdata\Local\</Image>        
+          </ProcessTerminate>
+        </RuleGroup>
+
+    </EventFiltering>
+</Sysmon>
+
+
