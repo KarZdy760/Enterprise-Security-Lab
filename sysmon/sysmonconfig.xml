@@ -4,7 +4,7 @@
  
     <!-- Event rules -->
     <EventFiltering>
-        <!-- Process Creation-->
+        <!-- Process Creation ID Tag 1-->
             <RuleGroup name="Process Creation" groupRelation="or">
 
                 <!-- Exclusions -->
@@ -30,7 +30,7 @@
                         <Image condition="begin with">C:\Program Files\Windows Defender\</Image>        <!--Microsoft:Windows:Defender in Win10-->
                         <Image condition="is">C:\Windows\system32\MpSigStub.exe</Image>        <!--Microsoft:Windows: Microsoft Malware Protection Signature Update Stub-->
                         <Image condition="begin with">C:\Windows\SoftwareDistribution\Download\Install\AM_</Image>        <!--Microsoft:Defender: Signature updates-->
-                        <Image condition="is">C:\Program Files\Microsoft Security Client\MpCmdRun.exe</Image>
+                        <Image condition="is">C:\Program Files\Microsoft Security Client\MpCmdRun.exe</Image>          <!-- Microsoft:Defender: Antyvirus scanning -->
                     <!-- Micrososft:Windows:svchost -->
                         <CommandLine condition="is">C:\Windows\system32\svchost.exe -k appmodel -s StateRepository</CommandLine>
                         <CommandLine condition="is">C:\Windows\system32\svchost.exe -k appmodel</CommandLine>				<!--Microsoft:Windows 10-->
@@ -118,35 +118,70 @@
 
         
         <!--Process Termination-->
-        <RuleGroup name="Process Termination" groupRelation="or">
-            <ProcessTerminate onmatch="include">
-                <!--  -->
-                <!-- Uncommon locations -->
-                    <Image condition="begin with">C:\PerfLogs\</Image>
-                    <Image condition="begin with">C:\$Recycle.bin\</Image>
-                    <Image condition="begin with">C:\Intel\Logs\</Image>
-                    <Image condition="begin with">C:\Users\Default\</Image>
-                    <Image condition="begin with">C:\Users\Public\</Image>
-                    <Image condition="begin with">C:\Users\NetworkService\</Image>
-                    <Image condition="begin with">C:\Windows\Fonts\</Image>
-                    <Image condition="begin with">C:\Windows\Debug\</Image>
-                    <Image condition="begin with">C:\Windows\Media\</Image>
-                    <Image condition="begin with">C:\Windows\Help\</Image>
-                    <Image condition="begin with">C:\Windows\addins\</Image>
-                    <Image condition="begin with">C:\Windows\repair\</Image>
-                    <Image condition="begin with">C:\Windows\security\</Image>
-                    <Image condition="begin with">C:\Windows\system32\config\systemprofile\</Image>
-                    <Image condition="contains">VolumeShadowCopy</Image>
-                    <Image condition="contains">\htdocs\</Image>
-                    <Image condition="contains">\wwwroot\</Image>
-                    <Image condition="contains">\Temp\</Image>
-                    <Image condition="contains">\Downloads\</Image>
-                    <Image condition="contains">\Desktop\</Image>
-                    <Image condition="contains">\Appdata\Local\</Image>        
-          </ProcessTerminate>
-        </RuleGroup>
+            <RuleGroup name="Process Termination" groupRelation="or">
+                <ProcessTerminate onmatch="include">
+                    <!--  -->
+                    <!-- Uncommon locations -->
+                        <Image condition="begin with">C:\PerfLogs\</Image>
+                        <Image condition="begin with">C:\$Recycle.bin\</Image>
+                        <Image condition="begin with">C:\Intel\Logs\</Image>
+                        <Image condition="begin with">C:\Users\Default\</Image>
+                        <Image condition="begin with">C:\Users\Public\</Image>
+                        <Image condition="begin with">C:\Users\NetworkService\</Image>
+                        <Image condition="begin with">C:\Windows\Fonts\</Image>
+                        <Image condition="begin with">C:\Windows\Debug\</Image>
+                        <Image condition="begin with">C:\Windows\Media\</Image>
+                        <Image condition="begin with">C:\Windows\Help\</Image>
+                        <Image condition="begin with">C:\Windows\addins\</Image>
+                        <Image condition="begin with">C:\Windows\repair\</Image>
+                        <Image condition="begin with">C:\Windows\security\</Image>
+                        <Image condition="begin with">C:\Windows\system32\config\systemprofile\</Image>
+                        <Image condition="contains">VolumeShadowCopy</Image>
+                        <Image condition="contains">\htdocs\</Image>
+                        <Image condition="contains">\wwwroot\</Image>
+                        <Image condition="contains">\Temp\</Image>
+                        <Image condition="contains">\Downloads\</Image>
+                        <Image condition="contains">\Desktop\</Image>
+                        <Image condition="contains">\Appdata\Local\</Image>        
+            </ProcessTerminate>
+            </RuleGroup>
+        
+    
+        <!-- File Create Time ID Tag 2-->
+            <RuleGroup name="File Create Time" groupRelation="or">
 
-    </EventFiltering>
+                <!-- Exclusions -->
+                    <FileCreateTime onmatch="exclude">
+                        <Image condition="end with">AppData\Local\Google\Chrome\Application\chrome.exe</Image>				<!--chrome constantly changes files-->
+                        <Image condition="end with">Root\VFS\ProgramFilesX86\Google\Chrome\Application\chrome.exe</Image>				<!--chrome constantly changes files-->
+                        <TargetFilename condition="contains">\NVIDIA\NvBackend\ApplicationOntology\</TargetFilename> <!--NVIDIA GeForce Experience Application Ontology, 1000's of events in user profile-->
+                        <Image condition="image">OneDrive.exe</Image>        <!--OneDrive constantly changes file times-->
+                        <Image condition="contains">setup</Image>
+                    </FileCreateTime>
+
+                <!-- Detections -->
+                    <FileCreateTime onmatch="include">
+                        <TargetFilename name="technique_id=T1099,technique_name=Timestomp" condition="end with">.exe</TargetFilename> <!--Look for backdated executables anywhere-->
+                        <Image name="technique_id=T1070.006,technique_name=Timestomp" condition="begin with">C:\Temp</Image>        <!--Look for timestomping in temp folders-->
+                        <Image name="technique_id=T1070.006,technique_name=Timestomp" condition="begin with">C:\Windows\Temp</Image>
+                        <Image name="technique_id=T1070.006,technique_name=Timestomp" condition="begin with">C:\Tmp</Image>
+                        <Image name="technique_id=T1070.006,technique_name=Timestomp" condition="begin with">C:\Users</Image>        <!--Look for timestomping in user area-->
+                    </FileCreateTime>
+            </RuleGroup>
+        <!-- Network Connection ID Tag 3 -->
+
+            <RuleGroup name = "" groupRelation="or">
+                <NetworkConnect onmatch="include">
+                    <!-- Web, DNS and Time Protocols -->
+                    <DestinationPort name="C2 Channels" condition="contains any">80;443;53;123</DestinationPort>
+                    <!-- LDAP, LDAPS, GC over SSL and Kerberos -->
+                    <DestinationPort name="Directory Ports" condition="contains any">389;636;3268;3269;88</DestinationPort>
+                    <!-- RDP, WinRMS, FTP, SSH, Telnet, SMB and RPC -->
+                    <DestinationPort name="Management Ports" condition="contains any">3389;5985;5986;21;22;23;445;135;138;139</DestinationPort>
+                </NetworkConnect>
+                  
+                
+        </EventFiltering>
 </Sysmon>
 
 
